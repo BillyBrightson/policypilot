@@ -1,0 +1,156 @@
+import { Framework } from "./types";
+
+export const frameworks: Framework[] = [
+    {
+        id: "iso-27001",
+        name: "ISO/IEC 27001:2022",
+        description: "The international standard for Information Security Management Systems (ISMS).",
+        category: "ISO",
+        controls: [
+            {
+                id: "iso-27001-5.1",
+                code: "5.1",
+                title: "Leadership and Commitment",
+                description: "Top management shall demonstrate leadership and commitment with respect to the information security management system.",
+                category: "Leadership",
+            },
+            {
+                id: "iso-27001-5.2",
+                code: "5.2",
+                title: "Policy",
+                description: "Top management shall establish an information security policy.",
+                category: "Leadership",
+            },
+            {
+                id: "iso-27001-6.1.2",
+                code: "6.1.2",
+                title: "Information Security Risk Assessment",
+                description: "The organization shall define and apply an information security risk assessment process.",
+                category: "Planning",
+            },
+            {
+                id: "iso-27001-7.2",
+                code: "7.2",
+                title: "Competence",
+                description: "The organization shall determine the necessary competence of person(s) doing work under its control.",
+                category: "Support",
+            },
+            {
+                id: "iso-27001-8.1",
+                code: "8.1",
+                title: "Operational Planning and Control",
+                description: "The organization shall plan, implement and control the processes needed to meet information security requirements.",
+                category: "Operation",
+            },
+        ],
+    },
+    {
+        id: "ghana-dpa",
+        name: "Data Protection Act, 2012 (Act 843)",
+        description: "Ghana's primary legislation for the protection of personal data.",
+        category: "Ghana",
+        controls: [
+            {
+                id: "dpa-18",
+                code: "Section 18",
+                title: "Accountability",
+                description: "A data controller shall be accountable for the processing of personal data.",
+                category: "General Principles",
+            },
+            {
+                id: "dpa-20",
+                code: "Section 20",
+                title: "Consent",
+                description: "A data controller shall not process personal data without the prior consent of the data subject.",
+                category: "General Principles",
+            },
+            {
+                id: "dpa-27",
+                code: "Section 27",
+                title: "Security Measures",
+                description: "A data controller shall take necessary steps to secure the integrity of personal data.",
+                category: "Security",
+            },
+            {
+                id: "dpa-46",
+                code: "Section 46",
+                title: "Registration",
+                description: "A data controller shall register with the Data Protection Commission.",
+                category: "Registration",
+            },
+        ],
+    },
+    {
+        id: "gdpr",
+        name: "GDPR",
+        description: "General Data Protection Regulation (EU) 2016/679.",
+        category: "International",
+        controls: [
+            {
+                id: "gdpr-art-5",
+                code: "Article 5",
+                title: "Principles relating to processing of personal data",
+                description: "Personal data shall be processed lawfully, fairly and in a transparent manner.",
+                category: "Principles",
+            },
+            {
+                id: "gdpr-art-6",
+                code: "Article 6",
+                title: "Lawfulness of processing",
+                description: "Processing shall be lawful only if and to the extent that at least one legal basis applies.",
+                category: "Principles",
+            },
+            {
+                id: "gdpr-art-32",
+                code: "Article 32",
+                title: "Security of processing",
+                description: "The controller and the processor shall implement appropriate technical and organizational measures.",
+                category: "Security",
+            },
+        ],
+    },
+    {
+        id: "iso-9001",
+        name: "ISO 9001:2015",
+        description: "Quality Management Systems requirements.",
+        category: "ISO",
+        controls: [
+            {
+                id: "iso-9001-4.1",
+                code: "4.1",
+                title: "Understanding the organization and its context",
+                description: "The organization shall determine external and internal issues that are relevant to its purpose.",
+                category: "Context",
+            },
+            {
+                id: "iso-9001-5.1",
+                code: "5.1",
+                title: "Leadership and commitment",
+                description: "Top management shall demonstrate leadership and commitment with respect to the quality management system.",
+                category: "Leadership",
+            },
+        ],
+    },
+    {
+        id: "ghana-csa",
+        name: "Cyber Security Act, 2020 (Act 1038)",
+        description: "Regulates cybersecurity activities in Ghana.",
+        category: "Ghana",
+        controls: [
+            {
+                id: "csa-35",
+                code: "Section 35",
+                title: "Protection of Critical Information Infrastructure",
+                description: "Owners of CII shall ensure the security of their infrastructure.",
+                category: "CII",
+            },
+            {
+                id: "csa-40",
+                code: "Section 40",
+                title: "Incident Reporting",
+                description: "Significant cybersecurity incidents must be reported to the Authority.",
+                category: "Incident Management",
+            },
+        ],
+    },
+];

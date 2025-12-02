@@ -1,0 +1,150 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the tenant
+    function isTenantOwner(tenantId) {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/tenants/$(tenantId)).data.ownerUserId == request.auth.uid;
+    }
+    
+    // Helper function to check if user belongs to tenant
+    function belongsToTenant(tenantId) {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tenantId == tenantId;
+    }
+    
+    // Tenants collection
+    match /tenants/{tenantId} {
+      // Users can read their own tenant
+      allow read: if isAuthenticated() && (isTenantOwner(tenantId) || belongsToTenant(tenantId));
+      // Only authenticated users can create tenants (during onboarding)
+      allow create: if isAuthenticated() && request.resource.data.ownerUserId == request.auth.uid;
+      // Only tenant owner can update
+      allow update: if isTenantOwner(tenantId);
+      // Only tenant owner can delete
+      allow delete: if isTenantOwner(tenantId);
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own user document
+      allow read: if isAuthenticated() && (userId == request.auth.uid || belongsToTenant(resource.data.tenantId));
+      // Users can create their own user document during signup
+      allow create: if isAuthenticated() && userId == request.auth.uid;
+      // Users can update their own user document
+      allow update: if isAuthenticated() && userId == request.auth.uid;
+      // Users can delete their own user document
+      allow delete: if isAuthenticated() && userId == request.auth.uid;
+    }
+    
+    // Compliance Profiles collection
+    match /complianceProfiles/{profileId} {
+      // Users can read profiles for their tenant
+      allow read: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can create profiles for their tenant
+      allow create: if isAuthenticated() && belongsToTenant(request.resource.data.tenantId);
+      // Users can update profiles for their tenant
+      allow update: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can delete profiles for their tenant
+      allow delete: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+    }
+    
+    // Policies collection
+    match /policies/{policyId} {
+      // Users can read policies for their tenant
+      allow read: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can create policies for their tenant
+      allow create: if isAuthenticated() && belongsToTenant(request.resource.data.tenantId);
+      // Users can update policies for their tenant
+      allow update: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can delete policies for their tenant
+      allow delete: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+    }
+    
+    // Training Modules collection (global read for authenticated users)
+    match /trainingModules/{moduleId} {
+      // All authenticated users can read training modules
+      allow read: if isAuthenticated();
+      // Only admins can create/update/delete (you can restrict this later)
+      allow write: if false; // Disable writes for now
+    }
+    
+    // Training Completions collection
+    match /trainingCompletions/{completionId} {
+      // Users can read their own completions
+      allow read: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can create their own completions
+      allow create: if isAuthenticated() && 
+                     belongsToTenant(request.resource.data.tenantId) &&
+                     request.resource.data.userId == request.auth.uid;
+      // Users can update their own completions
+      allow update: if isAuthenticated() && 
+                     belongsToTenant(resource.data.tenantId) &&
+                     resource.data.userId == request.auth.uid;
+      // Users can delete their own completions
+      allow delete: if isAuthenticated() && 
+                     belongsToTenant(resource.data.tenantId) &&
+                     resource.data.userId == request.auth.uid;
+    }
+    
+    // Trainer Profiles collection (public read for authenticated users)
+    match /trainerProfiles/{trainerId} {
+      // All authenticated users can read trainer profiles
+      allow read: if isAuthenticated();
+      // Disable writes for now (can add admin-only writes later)
+      allow write: if false;
+    }
+    
+    // Trainer Bookings collection
+    match /trainerBookings/{bookingId} {
+      // Users can read bookings for their tenant
+      allow read: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can create bookings for their tenant
+      allow create: if isAuthenticated() && 
+                     belongsToTenant(request.resource.data.tenantId) &&
+                     request.resource.data.requestedByUserId == request.auth.uid;
+      // Users can update bookings for their tenant (owner/admin only - can enhance later)
+      allow update: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can delete bookings for their tenant
+      allow delete: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+    }
+    
+    // Subscriptions collection
+    match /subscriptions/{subscriptionId} {
+      // Users can read subscriptions for their tenant
+      allow read: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Users can create subscriptions for their tenant (during onboarding)
+      allow create: if isAuthenticated() && belongsToTenant(request.resource.data.tenantId);
+      // Only tenant owner can update subscriptions (for now)
+      allow update: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+      // Only tenant owner can delete subscriptions
+      allow delete: if isAuthenticated() && belongsToTenant(resource.data.tenantId);
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      // Users can read their own notifications for their tenant
+      allow read: if isAuthenticated() && 
+                     belongsToTenant(resource.data.tenantId) &&
+                     resource.data.userId == request.auth.uid;
+      // System can create notifications for users in their tenant
+      allow create: if isAuthenticated() && 
+                       belongsToTenant(request.resource.data.tenantId) &&
+                       request.resource.data.userId == request.auth.uid;
+      // Users can update their own notifications (e.g., mark as read)
+      allow update: if isAuthenticated() && 
+                       belongsToTenant(resource.data.tenantId) &&
+                       resource.data.userId == request.auth.uid;
+      // Users can delete their own notifications
+      allow delete: if isAuthenticated() && 
+                       belongsToTenant(resource.data.tenantId) &&
+                       resource.data.userId == request.auth.uid;
+    }
+  }
+}
+
