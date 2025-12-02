@@ -27,7 +27,7 @@ interface PolicyGenerationModalProps {
   complianceProfile?: ComplianceProfile | null;
 }
 
-const statusIconMap: Record<PipelineStepStatus, JSX.Element> = {
+const statusIconMap: Record<PipelineStepStatus, React.JSX.Element> = {
   pending: <CircleDashed className="h-4 w-4 text-muted-foreground" />,
   running: <Loader2 className="h-4 w-4 text-primary animate-spin" />,
   complete: <CheckCircle2 className="h-4 w-4 text-green-600" />,

@@ -74,7 +74,7 @@ export async function getTenantByOwner(ownerUserId: string): Promise<Tenant | nu
 }
 
 // USERS
-export async function createUser(data: Omit<User, "id">): Promise<string> {
+export async function createUser(data: User): Promise<string> {
   const userRef = doc(collection(db, "users"), data.id); // Use Firebase Auth UID as doc ID
   await setDoc(userRef, {
     ...data,
@@ -192,7 +192,7 @@ export async function updatePolicyStatus(id: string, status: Policy["status"]): 
 
 export async function updatePolicyContent(id: string, content: string): Promise<void> {
   const docRef = doc(db, "policies", id);
-  await updateDoc(docRef, { 
+  await updateDoc(docRef, {
     content,
     lastGeneratedAt: Timestamp.now(),
   });
@@ -329,7 +329,7 @@ export async function getTrainerProfile(id: string): Promise<TrainerProfile | nu
   const docRef = doc(db, "trainerProfiles", id);
   const docSnap = await getDoc(docRef);
   if (!docSnap.exists()) return null;
-  return { id: docSnap.id, ...doc.data() } as TrainerProfile;
+  return { id: docSnap.id, ...docSnap.data() } as TrainerProfile;
 }
 
 // TRAINER BOOKINGS

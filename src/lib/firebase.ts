@@ -32,24 +32,9 @@ if (!firebaseConfig.apiKey || firebaseConfig.apiKey.trim() === "") {
 }
 
 // Initialize Firebase (avoid re-initialization)
-let app: FirebaseApp;
-let auth: Auth;
-let db: Firestore;
-
-if (typeof window !== "undefined") {
-  try {
-    if (!getApps().length) {
-      app = initializeApp(firebaseConfig);
-    } else {
-      app = getApps()[0];
-    }
-    auth = getAuth(app);
-    db = getFirestore(app);
-  } catch (error) {
-    console.error("❌ Firebase initialization error:", error);
-    throw error;
-  }
-}
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 export { auth, db };
 export default app;

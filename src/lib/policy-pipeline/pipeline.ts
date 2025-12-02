@@ -450,7 +450,6 @@ export async function runPolicyGenerationPipeline(
     controlCoverage,
     document,
     provenanceJson,
-    createdAt: new Date(),
   });
 
   await updatePolicyCurrentVersion(policyId, versionId, summary, controlCoverage);

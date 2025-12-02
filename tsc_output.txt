@@ -1,0 +1,6 @@
+src/components/policy-generation-modal.tsx(30,49): error TS2503: Cannot find namespace 'JSX'.
+src/lib/db.ts(332,35): error TS2339: Property 'data' does not exist on type '{ (firestore: Firestore, path: string, ...pathSegments: string[]): DocumentReference<DocumentData, DocumentData>; <AppModelType, DbModelType extends DocumentData>(reference: CollectionReference<...>, path?: string | undefined, ...pathSegments: string[]): DocumentReference<...>; <AppModelType, DbModelType extends Doc...'.
+src/lib/export-policy.ts(8,24): error TS7016: Could not find a declaration file for module 'file-saver'. 'C:/Users/Billy/Desktop/PROJECTS/PolicyPilot/node_modules/file-saver/dist/FileSaver.min.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/file-saver` if it exists or add a new declaration (.d.ts) file containing `declare module 'file-saver';`
+src/lib/firebase.ts(55,16): error TS2454: Variable 'app' is used before being assigned.
+src/lib/policy-pipeline/pipeline.ts(453,5): error TS2353: Object literal may only specify known properties, and 'createdAt' does not exist in type 'Omit<PolicyVersion, "id" | "createdAt">'.
